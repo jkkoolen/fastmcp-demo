@@ -1,18 +1,22 @@
 """Demo MCP server built with FASTMCP."""
 
-from fastmcp import FastMCPServer
+from fastmcp import FastMCP
 
 
-class DemoMCPServer(FastMCPServer):
-    async def handle_request(self, request):
-        """Handle incoming MCP requests and return a demo response."""
-        return {
-            "status": "ok",
-            "message": "Hello from FASTMCP demo server!",
-            "received": getattr(request, "data", request),
-        }
+app = FastMCP("demo")
+
+
+@app.tool()
+def hello(name: str) -> str:
+    """Say hello to someone."""
+    return f"Hello, {name}!"
+
+
+@app.tool()
+def add(a: int, b: int) -> int:
+    """Add two numbers together."""
+    return a + b
 
 
 if __name__ == "__main__":
-    server = DemoMCPServer(host="0.0.0.0", port=8000)
-    server.run()
+    app.run()
